@@ -1,8 +1,7 @@
 # Personal Finance Dashboard
 
 A full-stack personal finance application with an ML-powered transaction
-categorisation engine, a **human-in-the-loop** override system, and a bold
-**neo-brutalist** UI.
+categorisation engine and a **human-in-the-loop** override system.
 
 Raw bank transactions are clustered into spending categories by an unsupervised
 ML pipeline (character-level TF-IDF + K-Means), while a manual override layer lets
