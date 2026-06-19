@@ -11,8 +11,6 @@ from sklearn.preprocessing import StandardScaler
 N_CLUSTERS = 5
 
 # Keywords used to assign human-readable names to clusters post-fit.
-# Ordered by priority — first category to exceed 0 hits wins; ties broken
-# by whichever keyword list has the most matches.
 _CATEGORY_KEYWORDS: list[tuple[str, list[str]]] = [
     ("Subscriptions", ["netflix", "spotify", "hulu", "prime", "digital", "premium", "plus"]),
     ("Transport", ["uber", "lyft", "trip", "shell", "gas", "fuel", "oil", "atm", "withdrawal"]),
@@ -21,20 +19,6 @@ _CATEGORY_KEYWORDS: list[tuple[str, list[str]]] = [
     ("Entertainment & Health", ["steam", "valve", "game", "fitness", "planet", "gym", "sport"]),
 ]
 
-# ---------------------------------------------------------------------------
-# Result cache
-# ---------------------------------------------------------------------------
-# Clustering is deterministic (random_state=42) and depends only on the
-# vendor/amount/date of the rows — never on manual_category. We therefore
-# memoise the cluster assignment keyed on a content hash of *just* those
-# fields. Two big wins:
-#   1. Toggling a manual override (the most common edit) does NOT recompute
-#      K-Means, since the override is not part of the key.
-#   2. Repeated reads of unchanged data (page reloads, multiple tabs, the
-#      re-fetch that follows every mutation) are served from memory.
-# This preserves the "ML always runs on raw data, never persisted" design:
-# the cache is a pure-function memo, invalidated automatically whenever the
-# underlying data changes (the hash changes).
 _CACHE_MAXSIZE = 16
 _assignment_cache: "OrderedDict[str, dict[str, tuple[int, str]]]" = OrderedDict()
 
@@ -130,7 +114,6 @@ def _compute_assignments(transactions: list[dict]) -> dict[str, tuple[int, str]]
     # 2. Feature Engineering                                               #
     # ------------------------------------------------------------------ #
     # Character n-gram TF-IDF: robust to noisy vendor strings and
-    # abbreviations (e.g. "AMZN Mktp" ≈ "Amazon", "UBER *TRIP" ≈ "Uber Trip").
     tfidf = TfidfVectorizer(
         analyzer="char_wb",
         ngram_range=(2, 4),
