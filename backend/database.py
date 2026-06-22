@@ -59,7 +59,7 @@ def init_db() -> None:
         try:
             conn.execute("ALTER TABLE transactions ADD COLUMN manual_category TEXT")
         except sqlite3.OperationalError:
-            pass  # Column already exists
+            pass 
 
         conn.execute("CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date)")
 
