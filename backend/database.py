@@ -56,13 +56,11 @@ def init_db() -> None:
             )
             """
         )
-        # Idempotent migration: add column to existing DBs that pre-date it
         try:
             conn.execute("ALTER TABLE transactions ADD COLUMN manual_category TEXT")
         except sqlite3.OperationalError:
             pass  # Column already exists
 
-        # Speeds up the ORDER BY date on every read.
         conn.execute("CREATE INDEX IF NOT EXISTS idx_transactions_date ON transactions(date)")
 
     _migrate_normalize_dates()
