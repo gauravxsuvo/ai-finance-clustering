@@ -7,12 +7,7 @@ import { Moon, Sun } from "lucide-react";
 export default function ThemeToggle() {
   const { resolvedTheme, setTheme } = useTheme();
 
-  // next-themes resolves the theme on the client only; render an inert
-  // placeholder of identical size until mounted to avoid a hydration mismatch.
   const [mounted, setMounted] = useState(false);
-  // One-shot mount flag to avoid an SSR/client hydration mismatch — the
-  // documented "sync with an external system" exception to this rule.
-  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => setMounted(true), []);
 
   if (!mounted) {
