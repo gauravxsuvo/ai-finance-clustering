@@ -14,7 +14,6 @@ const STORAGE_KEY = "pf_currency";
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState("USD");
 
-  // Read persisted preference after mount (avoids SSR mismatch)
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
 
