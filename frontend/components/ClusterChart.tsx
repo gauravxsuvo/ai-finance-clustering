@@ -17,8 +17,6 @@ export default function ClusterChart({ data, activeCategory, onSelect }: Cluster
   const { currency } = useSettings();
   const total = data.reduce((sum, d) => sum + d.total, 0);
 
-  // Per-slice fill lives in the data (recharts 3 deprecates <Cell>); dimmed
-  // slices get an alpha suffix so the active filter stands out.
   const chartData = data.map((d) => {
     const base = categoryColor(d.cluster_name);
     const dimmed = activeCategory && activeCategory !== d.cluster_name;
